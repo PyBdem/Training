@@ -9,293 +9,149 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Entrainement">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
 <title>Entrainement — Benoit</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --green:#1D9E75;--green-dark:#0F6E56;--green-deep:#085041;
+  --green-light:#E1F5EE;--green-mid:#9FE1CB;
+  --amber:#EF9F27;--amber-light:#FAEEDA;--amber-dark:#854F0B;
+  --text:#1A1A18;--text-muted:#5F5E5A;--text-faint:#888780;
+  --bg:#F8F7F4;--surface:#FFFFFF;
+  --border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.14);
+  --radius:12px;--radius-sm:8px;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+}
+@media(prefers-color-scheme:dark){:root{
+  --green:#5DCAA5;--green-dark:#9FE1CB;--green-deep:#E1F5EE;
+  --green-light:#085041;--green-mid:#0F6E56;
+  --amber:#FAC775;--amber-light:#412402;--amber-dark:#FAC775;
+  --text:#F1EFE8;--text-muted:#B4B2A9;--text-faint:#888780;
+  --bg:#141412;--surface:#1C1C1A;
+  --border:rgba(255,255,255,0.07);--border-strong:rgba(255,255,255,0.12);
+}}
+html,body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100%;overflow:hidden;font-size:15px;line-height:1.5}
+.app{display:flex;flex-direction:column;height:100dvh;max-width:480px;margin:0 auto;position:relative}
 
-  :root {
-    --green: #1D9E75;
-    --green-dark: #0F6E56;
-    --green-deep: #085041;
-    --green-light: #E1F5EE;
-    --green-mid: #9FE1CB;
-    --amber: #EF9F27;
-    --amber-light: #FAEEDA;
-    --amber-dark: #854F0B;
-    --gray-50: #F8F7F4;
-    --gray-100: #EDECEA;
-    --gray-200: #D3D1C7;
-    --gray-400: #888780;
-    --gray-600: #5F5E5A;
-    --gray-900: #1A1A18;
-    --text: #1A1A18;
-    --text-muted: #5F5E5A;
-    --text-faint: #888780;
-    --bg: #F8F7F4;
-    --surface: #FFFFFF;
-    --border: rgba(0,0,0,0.08);
-    --border-strong: rgba(0,0,0,0.14);
-    --radius: 12px;
-    --radius-sm: 8px;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
+/* Header */
+.header{background:var(--green-dark);padding:calc(var(--safe-top) + 14px) 20px 14px;flex-shrink:0}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start}
+.header-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--green-mid);margin-bottom:2px}
+.header-title{font-size:20px;font-weight:600;color:#fff}
+.header-phase{font-size:12px;color:var(--green-mid);margin-top:2px}
+.week-badge{background:rgba(255,255,255,.12);border-radius:20px;padding:4px 10px;font-size:12px;color:#fff;font-weight:500;font-family:'DM Mono',monospace}
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --green: #5DCAA5;
-      --green-dark: #9FE1CB;
-      --green-deep: #E1F5EE;
-      --green-light: #085041;
-      --green-mid: #0F6E56;
-      --amber: #FAC775;
-      --amber-light: #412402;
-      --amber-dark: #FAC775;
-      --gray-50: #1C1C1A;
-      --gray-100: #242422;
-      --gray-200: #2C2C2A;
-      --gray-400: #888780;
-      --gray-600: #B4B2A9;
-      --gray-900: #F1EFE8;
-      --text: #F1EFE8;
-      --text-muted: #B4B2A9;
-      --text-faint: #888780;
-      --bg: #141412;
-      --surface: #1C1C1A;
-      --border: rgba(255,255,255,0.07);
-      --border-strong: rgba(255,255,255,0.12);
-    }
-  }
+/* Day strip */
+.day-strip{background:var(--green-deep);padding:10px 16px 12px;display:flex;gap:6px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.day-strip::-webkit-scrollbar{display:none}
+.day-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:var(--radius-sm);border:1px solid transparent;background:transparent;cursor:pointer;transition:all .15s;min-width:52px}
+.day-btn.active-day{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.15)}
+.day-btn.selected{background:var(--green);border-color:var(--green-mid)}
+.day-btn-label{font-size:10px;font-weight:500;color:var(--green-mid);letter-spacing:.06em;text-transform:uppercase}
+.day-btn.selected .day-btn-label{color:#fff}
+.day-btn-icon{font-size:11px;font-weight:600;color:#fff}
+.day-btn-type{font-size:9px;color:rgba(255,255,255,.5)}
+.day-btn.selected .day-btn-type{color:rgba(255,255,255,.8)}
+.day-dot{width:4px;height:4px;border-radius:50%;background:var(--green);margin-top:2px}
+.day-btn.selected .day-dot{background:#fff}
+.day-btn.rest-day .day-btn-icon{color:rgba(255,255,255,.35)}
 
-  html, body {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    height: 100%;
-    overflow: hidden;
-    font-size: 15px;
-    line-height: 1.5;
-  }
+/* Tabs */
+.tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 16px;flex-shrink:0}
+.tab-btn{flex:1;padding:11px 4px;font-size:11px;font-weight:500;color:var(--text-faint);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;text-align:center}
+.tab-btn.active{color:var(--green-dark);border-bottom-color:var(--green)}
 
-  .app {
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
-    max-width: 480px;
-    margin: 0 auto;
-    position: relative;
-  }
+/* Scroll */
+.scroll-content{flex:1;overflow-y:auto;padding:16px 16px calc(var(--safe-bottom) + 80px);-webkit-overflow-scrolling:touch}
 
-  /* Header */
-  .header {
-    background: var(--green-dark);
-    padding: calc(var(--safe-top) + 14px) 20px 14px;
-    flex-shrink: 0;
-  }
-  .header-top { display: flex; justify-content: space-between; align-items: flex-start; }
-  .header-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 2px; }
-  .header-title { font-size: 20px; font-weight: 600; color: #fff; }
-  .header-phase { font-size: 12px; color: var(--green-mid); margin-top: 2px; }
-  .week-badge { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 4px 10px; font-size: 12px; color: #fff; font-weight: 500; font-family: 'DM Mono', monospace; }
+/* Session */
+.session-header{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:14px 16px;margin-bottom:12px}
+.session-title{font-size:16px;font-weight:600;margin-bottom:2px}
+.session-sub{font-size:12px;color:var(--text-muted)}
+.session-meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.meta-chip{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:var(--green-light);color:var(--green-dark)}
 
-  /* Day strip */
-  .day-strip {
-    background: var(--green-deep);
-    padding: 10px 16px 12px;
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    flex-shrink: 0;
-    scrollbar-width: none;
-  }
-  .day-strip::-webkit-scrollbar { display: none; }
-  .day-btn {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    padding: 8px 10px;
-    border-radius: var(--radius-sm);
-    border: 1px solid transparent;
-    background: transparent;
-    cursor: pointer;
-    transition: all 0.15s;
-    min-width: 52px;
-  }
-  .day-btn.active-day { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
-  .day-btn.selected { background: var(--green); border-color: var(--green-mid); }
-  .day-btn-label { font-size: 10px; font-weight: 500; color: var(--green-mid); letter-spacing: 0.06em; text-transform: uppercase; }
-  .day-btn.selected .day-btn-label { color: #fff; }
-  .day-btn-icon { font-size: 11px; font-weight: 600; color: #fff; }
-  .day-btn-type { font-size: 9px; color: rgba(255,255,255,0.5); }
-  .day-btn.selected .day-btn-type { color: rgba(255,255,255,0.8); }
-  .day-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--green); margin-top: 2px; }
-  .day-btn.selected .day-dot { background: #fff; }
-  .day-btn.rest-day .day-btn-icon { color: rgba(255,255,255,0.35); }
+.section-block{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;overflow:hidden}
+.section-title{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);padding:10px 16px 8px;border-bottom:1px solid var(--border)}
 
-  /* Tabs */
-  .tab-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    padding: 0 16px;
-    gap: 0;
-    flex-shrink: 0;
-  }
-  .tab-btn {
-    flex: 1;
-    padding: 11px 8px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-faint);
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-  }
-  .tab-btn.active { color: var(--green-dark); border-bottom-color: var(--green); }
+/* Exercise row */
+.ex-row{border-bottom:1px solid var(--border)}
+.ex-row:last-child{border-bottom:none}
+.ex-main{display:flex;align-items:flex-start;gap:12px;padding:11px 16px}
+.ex-num{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--text-faint);min-width:20px;padding-top:2px}
+.ex-body{flex:1;min-width:0}
+.ex-name{font-size:14px;font-weight:500;color:var(--text)}
+.ex-detail{font-size:12px;color:var(--text-muted);margin-top:2px;line-height:1.4}
+.ex-tag{display:inline-block;font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--green-light);color:var(--green-dark);margin-left:6px;vertical-align:middle}
+.ex-actions{display:flex;gap:6px;flex-shrink:0;align-items:flex-start;padding-top:1px}
+.ex-icon-btn{background:none;border:none;cursor:pointer;padding:2px;color:var(--text-faint);font-size:16px;line-height:1;transition:color .15s}
+.ex-icon-btn:active{color:var(--green)}
 
-  /* Scroll content */
-  .scroll-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px 16px calc(var(--safe-bottom) + 16px);
-    -webkit-overflow-scrolling: touch;
-  }
+/* Last entry badge under exercise name */
+.ex-last{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;font-weight:500;color:var(--green-dark);background:var(--green-light);border-radius:20px;padding:2px 8px}
+.ex-last-pr{color:var(--amber-dark);background:var(--amber-light)}
 
-  /* Session cards */
-  .session-header {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    padding: 14px 16px;
-    margin-bottom: 12px;
-  }
-  .session-title { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
-  .session-sub { font-size: 12px; color: var(--text-muted); }
-  .session-meta { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-  .meta-chip { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; background: var(--green-light); color: var(--green-dark); }
-  .meta-chip.amber { background: var(--amber-light); color: var(--amber-dark); }
+/* Photo panel */
+.ex-photo-panel{display:none;padding:0 16px 12px}
+.ex-photo-panel.open{display:block}
+.ex-photo-panel img{width:100%;border-radius:var(--radius-sm);object-fit:cover;max-height:180px;background:var(--bg)}
+.ex-photo-caption{font-size:11px;color:var(--text-faint);margin-top:5px;text-align:center}
 
-  .section-block {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .section-title {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-    padding: 10px 16px 8px;
-    border-bottom: 1px solid var(--border);
-  }
+/* Timer bar */
+.timer-bar{display:flex;align-items:center;gap:10px;padding:8px 16px 10px;background:var(--bg);border-top:1px solid var(--border)}
+.timer-btn{background:var(--green);color:#fff;border:none;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.timer-btn:active{background:var(--green-dark)}
+.timer-label{font-size:11px;color:var(--text-faint);flex:1}
 
-  .ex-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .ex-row:last-child { border-bottom: none; }
-  .ex-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-faint);
-    min-width: 20px;
-    padding-top: 2px;
-  }
-  .ex-body { flex: 1; }
-  .ex-name { font-size: 14px; font-weight: 500; color: var(--text); }
-  .ex-detail { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
-  .ex-tag {
-    display: inline-block;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: var(--green-light);
-    color: var(--green-dark);
-    margin-left: 6px;
-    vertical-align: middle;
-  }
+/* Log entry panel */
+.log-panel{display:none;padding:10px 16px 14px;border-top:1px solid var(--border);background:var(--bg)}
+.log-panel.open{display:block}
+.log-inputs{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.log-input{flex:1;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 10px;font-size:14px;font-family:'DM Mono',monospace;font-weight:500;color:var(--text);outline:none;text-align:center;-moz-appearance:textfield}
+.log-input::-webkit-inner-spin-button,.log-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.log-input:focus{border-color:var(--green)}
+.log-input-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);text-align:center;margin-top:3px}
+.log-x{font-size:16px;color:var(--text-faint);font-weight:500;padding:0 2px;flex-shrink:0}
+.log-save-btn{background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
+.log-save-btn:active{background:var(--green-dark)}
 
-  .coach-tip {
-    background: var(--green-light);
-    border-left: 3px solid var(--green);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    padding: 12px 14px;
-    margin-bottom: 10px;
-  }
-  .coach-tip-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--green-dark); margin-bottom: 4px; }
-  .coach-tip-text { font-size: 13px; color: var(--green-deep); line-height: 1.5; }
+/* History rows */
+.log-history{display:flex;flex-direction:column;gap:5px}
+.log-hist-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-faint);margin-bottom:4px}
+.log-hist-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.log-hist-date{font-size:11px;color:var(--text-faint)}
+.log-hist-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--text)}
+.log-hist-pr{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;background:var(--amber-light);color:var(--amber-dark);border-radius:10px;padding:1px 6px;margin-left:6px}
 
-  /* Rest day */
-  .rest-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
-    text-align: center;
-    gap: 12px;
-  }
-  .rest-icon { font-size: 40px; color: var(--text-faint); font-weight: 300; }
-  .rest-title { font-size: 18px; font-weight: 600; }
-  .rest-text { font-size: 14px; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
+/* Global timer overlay */
+.timer-overlay{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--green-deep);color:#fff;padding:14px 20px calc(var(--safe-bottom) + 14px);display:none;align-items:center;gap:14px;z-index:100;border-top:1px solid rgba(255,255,255,.15)}
+.timer-overlay.visible{display:flex}
+.timer-overlay-time{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#fff;min-width:60px}
+.timer-overlay-label{flex:1;font-size:13px;color:var(--green-mid)}
+.timer-overlay-cancel{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 
-  /* Progression tab */
-  .prog-card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .prog-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .prog-row:last-child { border-bottom: none; }
-  .prog-label { font-size: 12px; font-weight: 600; color: var(--green-dark); min-width: 110px; font-family: 'DM Mono', monospace; }
-  .prog-text { font-size: 13px; color: var(--text-muted); text-align: right; line-height: 1.4; }
+/* Coach tip */
+.coach-tip{background:var(--green-light);border-left:3px solid var(--green);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;margin-bottom:10px}
+.coach-tip-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--green-dark);margin-bottom:4px}
+.coach-tip-text{font-size:13px;color:var(--green-deep);line-height:1.5}
 
-  /* Principles tab */
-  .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-  .principle-card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    padding: 12px 14px;
-  }
-  .principle-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .principle-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
-
-  .info-banner {
-    background: var(--amber-light);
-    border-radius: var(--radius);
-    border: 1px solid rgba(186,117,23,0.2);
-    padding: 12px 14px;
-    margin-bottom: 12px;
-  }
-  .info-banner-title { font-size: 12px; font-weight: 600; color: var(--amber-dark); margin-bottom: 3px; }
-  .info-banner-text { font-size: 12px; color: var(--amber-dark); line-height: 1.5; opacity: 0.85; }
+/* Rest / prog / principes */
+.rest-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;gap:12px}
+.rest-title{font-size:18px;font-weight:600}
+.rest-text{font-size:14px;color:var(--text-muted);max-width:260px;line-height:1.6}
+.prog-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;overflow:hidden}
+.prog-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border);font-size:13px}
+.prog-row:last-child{border-bottom:none}
+.prog-label{font-size:12px;font-weight:600;color:var(--green-dark);min-width:100px;font-family:'DM Mono',monospace}
+.prog-text{color:var(--text-muted);text-align:right;line-height:1.4}
+.principle-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.principle-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:12px 14px}
+.principle-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
+.principle-desc{font-size:11px;color:var(--text-muted);line-height:1.5}
+.info-banner{background:var(--amber-light);border-radius:var(--radius);border:1px solid rgba(186,117,23,.2);padding:12px 14px;margin-bottom:12px}
+.info-banner-title{font-size:12px;font-weight:600;color:var(--amber-dark);margin-bottom:3px}
+.info-banner-text{font-size:12px;color:var(--amber-dark);line-height:1.5;opacity:.85}
 </style>
 </head>
 <body>
@@ -310,145 +166,268 @@
       <div class="week-badge">Sem. 1–8</div>
     </div>
   </div>
-
   <div class="day-strip" id="dayStrip"></div>
-
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('session')">Session</button>
     <button class="tab-btn" onclick="switchTab('progression')">Progression</button>
     <button class="tab-btn" onclick="switchTab('principes')">Principes</button>
+    <button class="tab-btn" onclick="switchTab('journal')">Journal</button>
   </div>
-
   <div class="scroll-content" id="scrollContent"></div>
 </div>
 
+<div class="timer-overlay" id="timerOverlay">
+  <div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--green-mid);margin-bottom:2px">Repos</div>
+    <div class="timer-overlay-time" id="overlayTime">60</div>
+  </div>
+  <div class="timer-overlay-label" id="overlayLabel">Prends ton souffle</div>
+  <button class="timer-overlay-cancel" onclick="cancelTimer()">Terminer</button>
+</div>
+
 <script>
+// ── PHOTOS ───────────────────────────────────────────────────────────────
+const PHOTOS = {
+  'chest-press':   {url:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=70',cap:'Presse poitrine machine'},
+  'shoulder-press':{url:'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=600&q=70',cap:'Developpe epaules machine'},
+  'pec-deck':      {url:'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=600&q=70',cap:'Papillon pec deck'},
+  'lateral-raises':{url:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=70',cap:'Lateral raises machine'},
+  'triceps-push':  {url:'https://images.unsplash.com/photo-1530822847156-5df684ec5933?w=600&q=70',cap:'Triceps pushdown cable'},
+  'triceps-over':  {url:'https://images.unsplash.com/photo-1597452485677-d661670d9640?w=600&q=70',cap:'Triceps overhead machine'},
+  'lat-pulldown':  {url:'https://images.unsplash.com/photo-1598971639058-a4575ce40fc5?w=600&q=70',cap:'Tirage poitrine (lat pulldown)'},
+  'seated-row':    {url:'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=600&q=70',cap:'Rowing machine assise'},
+  'face-pulls':    {url:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=70',cap:'Face pulls cable'},
+  'bicep-curl':    {url:'https://images.unsplash.com/photo-1581009137042-c552e485697a?w=600&q=70',cap:'Curl biceps machine'},
+  'leg-press':     {url:'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=70',cap:'Leg press'},
+  'leg-extension': {url:'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&q=70',cap:'Leg extension quadriceps'},
+  'leg-curl':      {url:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&q=70',cap:'Leg curl ischio-jambiers'},
+  'abductors':     {url:'https://images.unsplash.com/photo-1544033527-b192daee1f5b?w=600&q=70',cap:'Abducteurs machine'},
+  'calf-raise':    {url:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=70',cap:'Mollets assis'},
+  'ab-crunch':     {url:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=70',cap:'Ab crunch machine'},
+  'rameur':        {url:'https://images.unsplash.com/photo-1542766788-a2f588f447ee?w=600&q=70',cap:'Rameur'},
+  'velo':          {url:'https://images.unsplash.com/photo-1507398941214-572c25f4b1dc?w=600&q=70',cap:'Velo stationnaire'},
+};
+
+// ── PLAN ─────────────────────────────────────────────────────────────────
 const days = [
-  {
-    label: 'Dim', short: 'Salle', type: 'Force A', active: true,
-    title: 'Force A — Poitrine, epaules, triceps',
-    sub: 'Salle | 10 min aviron + ~60 min machines',
-    chips: ['Salle', '~70 min'],
-    sections: [
-      { name: 'Echauffement', items: [
-        { name: 'Rameur', detail: '10 minutes — effort modere, 65-70% FC max', tag: null }
-      ]},
-      { name: 'Circuit machines', items: [
-        { name: 'Presse poitrine (chest press)', detail: '3 x 12-15 reps | repos 60 sec', tag: 'guidee' },
-        { name: 'Developpe epaules (shoulder press)', detail: '3 x 12-15 | repos 60 sec', tag: 'guidee' },
-        { name: 'Papillon pec deck', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
-        { name: 'Lateral raises machine', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
-        { name: 'Triceps pushdown cable', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
-        { name: 'Triceps overhead machine', detail: '2 x 15 | repos 45 sec', tag: 'guidee' },
-      ]},
-      { name: 'Finisher cardio', items: [
-        { name: 'Velo stationnaire ou elliptique', detail: '10 min, effort modere', tag: null }
-      ]}
-    ],
-    tip: 'Charge : choisis un poids ou tu peux faire 15 reps propres. 15 reps sans effort = augmente. Incapable de finir 12 = descends. Simple.'
-  },
-  {
-    label: 'Lun', short: 'Run', type: 'Course', active: true,
-    title: 'Course — Zone 2',
-    sub: 'Dehors ou tapis | 35-45 minutes',
-    chips: ['Cardio', 'Zone 2', '~40 min'],
-    sections: [
-      { name: 'Structure', items: [
-        { name: 'Marche 5 min', detail: 'Echauffement — augmenter progressivement', tag: null },
-        { name: 'Course Zone 2', detail: '25-35 min au rythme conversation — tu peux parler en phrases completes', tag: null },
-        { name: 'Marche 5 min', detail: 'Retour au calme', tag: null }
-      ]}
-    ],
-    tip: 'Zone 2 = lent, voulu, efficace. C\'est la zone de combustion des graisses maximale. Pas besoin d\'aller vite pour l\'instant.'
-  },
-  {
-    label: 'Mar', short: 'Salle', type: 'Force B', active: true,
-    title: 'Force B — Dos, biceps',
-    sub: 'Salle | 10 min aviron + ~60 min machines',
-    chips: ['Salle', '~70 min'],
-    sections: [
-      { name: 'Echauffement', items: [
-        { name: 'Rameur', detail: '10 minutes, effort modere', tag: null }
-      ]},
-      { name: 'Circuit machines', items: [
-        { name: 'Tirage poitrine (lat pulldown)', detail: '3 x 12-15 | repos 60 sec', tag: 'guidee' },
-        { name: 'Rowing machine assise (seated row)', detail: '3 x 12-15 | repos 60 sec', tag: 'guidee' },
-        { name: 'Tirage horizontal bras croises', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
-        { name: 'Curl biceps machine', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
-        { name: 'Curl marteau cable', detail: '2 x 15 | repos 45 sec', tag: 'guidee' },
-        { name: 'Face pulls cable', detail: '3 x 15 | repos 45 sec — sante epaules', tag: 'guidee' }
-      ]},
-      { name: 'Finisher cardio', items: [
-        { name: 'Rameur ou marche inclinee', detail: '10 min, effort modere', tag: null }
-      ]}
-    ],
-    tip: 'Face pulls : ne skip pas ca. Avec le volume de press du dimanche, les epaules ont besoin d\'equilibre. Ca protege ton investissement.'
-  },
-  {
-    label: 'Mer', short: 'Salle', type: 'Force C', active: true,
-    title: 'Force C — Jambes, fessiers, abdos',
-    sub: 'Salle | 10 min aviron + ~60 min machines',
-    chips: ['Salle', '~70 min'],
-    sections: [
-      { name: 'Echauffement', items: [
-        { name: 'Rameur', detail: '10 minutes, effort modere', tag: null }
-      ]},
-      { name: 'Circuit machines', items: [
-        { name: 'Leg press', detail: '4 x 12-15 | repos 75 sec — ton plus gros moteur metabolique', tag: 'guidee' },
-        { name: 'Leg extension quadriceps', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
-        { name: 'Leg curl ischio-jambiers', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
-        { name: 'Abducteurs machine', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
-        { name: 'Mollets assis (calf raise)', detail: '3 x 20 | repos 30 sec', tag: 'guidee' },
-        { name: 'Ab crunch machine', detail: '3 x 15 | repos 45 sec', tag: 'guidee' }
-      ]},
-      { name: 'Finisher optionnel', items: [
-        { name: 'Planche (plank)', detail: '3 x 20-30 sec — si il te reste de l\'energie', tag: null }
-      ]}
-    ],
-    tip: 'Le leg press est ta priorite de la semaine pour la composition corporelle. Les gros muscles des jambes brulent enormement au repos une fois developpes.'
-  },
-  {
-    label: 'Jeu', short: 'Flex', type: 'Actif/Flex', active: false, flex: true,
-    title: 'Journee active ou repos actif',
-    sub: 'Flexible selon ta recuperation',
-    chips: ['Optionnel'],
-    sections: [
-      { name: 'Options', items: [
-        { name: 'Option A — 2e sortie course', detail: '35-45 min Zone 2 si tu veux pousser a 2 courses cette semaine', tag: null },
-        { name: 'Option B — Salle legere', detail: 'Revisiter un groupe faible, 45 min max, charges -20%', tag: null },
-        { name: 'Option C — Marche longue', detail: '45-60 min marche rapide — recovery active efficace', tag: null }
-      ]}
-    ],
-    tip: 'Jeudi c\'est ton joker. Si la semaine a ete forte, marche et dors. Si tu te sens bien, 2e course. Ne prends pas la decision le matin — ecoute le corps en fin de journee.'
-  },
-  {
-    label: 'Ven', short: 'OFF', type: 'Repos', active: false, rest: true,
-    title: 'Repos', sub: ''
-  },
-  {
-    label: 'Sam', short: 'Run', type: 'Course', active: true,
-    title: 'Course — Zone 2',
-    sub: 'Dehors ou tapis | 35-45 minutes',
-    chips: ['Cardio', 'Zone 2', '~40 min'],
-    sections: [
-      { name: 'Structure', items: [
-        { name: 'Marche 5 min', detail: 'Echauffement', tag: null },
-        { name: 'Course Zone 2', detail: '25-35 min — meme rythme conversation que lundi', tag: null },
-        { name: 'Marche 5 min', detail: 'Retour au calme', tag: null }
-      ]}
-    ],
-    tip: 'Sortie de fin de semaine — profites-en pour courir dehors si la meteo le permet. Le terrain varie les muscles stabilisateurs et c\'est meilleur pour la tete aussi.'
-  }
+  {label:'Dim',short:'Salle',type:'Force A',active:true,
+   title:'Force A — Poitrine, epaules, triceps',sub:'Salle | 10 min aviron + ~60 min machines',chips:['Salle','~70 min'],
+   sections:[
+    {name:'Echauffement',items:[
+      {name:'Rameur',detail:'10 min — 65-70% FC max',tag:null,rest:0,photo:'rameur',logKey:null}
+    ]},
+    {name:'Circuit machines',items:[
+      {name:'Presse poitrine',     detail:'3 x 12-15 | repos 60s',tag:'guidee',rest:60,photo:'chest-press',  logKey:'presse-poitrine'},
+      {name:'Developpe epaules',   detail:'3 x 12-15 | repos 60s',tag:'guidee',rest:60,photo:'shoulder-press',logKey:'developpe-epaules'},
+      {name:'Papillon pec deck',   detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'pec-deck',     logKey:'pec-deck'},
+      {name:'Lateral raises',      detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'lateral-raises',logKey:'lateral-raises'},
+      {name:'Triceps pushdown',    detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'triceps-push', logKey:'triceps-pushdown'},
+      {name:'Triceps overhead',    detail:'2 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'triceps-over', logKey:'triceps-overhead'},
+    ]},
+    {name:'Finisher',items:[
+      {name:'Velo / elliptique',detail:'10 min modere',tag:null,rest:0,photo:'velo',logKey:null}
+    ]}
+   ],
+   tip:"Charge : 15 reps sans effort = augmente. Incapable de finir 12 = descends."},
+
+  {label:'Lun',short:'Run',type:'Course',active:true,
+   title:'Course — Zone 2',sub:'Dehors ou tapis | 35-45 min',chips:['Cardio','Zone 2'],
+   sections:[{name:'Structure',items:[
+     {name:'Marche 5 min', detail:'Echauffement',tag:null,rest:0,photo:null,logKey:null},
+     {name:'Course Zone 2',detail:'25-35 min — rythme conversation',tag:null,rest:0,photo:null,logKey:null},
+     {name:'Marche 5 min', detail:'Retour au calme',tag:null,rest:0,photo:null,logKey:null}
+   ]}],
+   tip:"Zone 2 = lent, voulu, efficace. Combustion des graisses maximale."},
+
+  {label:'Mar',short:'Salle',type:'Force B',active:true,
+   title:'Force B — Dos, biceps',sub:'Salle | 10 min aviron + ~60 min machines',chips:['Salle','~70 min'],
+   sections:[
+    {name:'Echauffement',items:[
+      {name:'Rameur',detail:'10 min modere',tag:null,rest:0,photo:'rameur',logKey:null}
+    ]},
+    {name:'Circuit machines',items:[
+      {name:'Lat pulldown',      detail:'3 x 12-15 | repos 60s',tag:'guidee',rest:60,photo:'lat-pulldown',logKey:'lat-pulldown'},
+      {name:'Rowing assise',     detail:'3 x 12-15 | repos 60s',tag:'guidee',rest:60,photo:'seated-row',  logKey:'rowing-assise'},
+      {name:'Tirage horizontal', detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'seated-row',  logKey:'tirage-horizontal'},
+      {name:'Curl biceps',       detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'bicep-curl',  logKey:'curl-biceps'},
+      {name:'Curl marteau cable',detail:'2 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'bicep-curl',  logKey:'curl-marteau'},
+      {name:'Face pulls cable',  detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'face-pulls',  logKey:'face-pulls'},
+    ]},
+    {name:'Finisher',items:[
+      {name:'Rameur ou marche inclinee',detail:'10 min modere',tag:null,rest:0,photo:'rameur',logKey:null}
+    ]}
+   ],
+   tip:"Face pulls : ne skip pas ca. Ca protege tes epaules a long terme."},
+
+  {label:'Mer',short:'Salle',type:'Force C',active:true,
+   title:'Force C — Jambes, fessiers, abdos',sub:'Salle | 10 min aviron + ~60 min machines',chips:['Salle','~70 min'],
+   sections:[
+    {name:'Echauffement',items:[
+      {name:'Rameur',detail:'10 min modere',tag:null,rest:0,photo:'rameur',logKey:null}
+    ]},
+    {name:'Circuit machines',items:[
+      {name:'Leg press',        detail:'4 x 12-15 | repos 75s',tag:'guidee',rest:75,photo:'leg-press',    logKey:'leg-press'},
+      {name:'Leg extension',    detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'leg-extension', logKey:'leg-extension'},
+      {name:'Leg curl',         detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'leg-curl',      logKey:'leg-curl'},
+      {name:'Abducteurs',       detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'abductors',     logKey:'abducteurs'},
+      {name:'Calf raise',       detail:'3 x 20 | repos 30s',   tag:'guidee',rest:30,photo:'calf-raise',    logKey:'calf-raise'},
+      {name:'Ab crunch machine',detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'ab-crunch',     logKey:'ab-crunch'},
+    ]},
+    {name:'Finisher optionnel',items:[
+      {name:'Planche (plank)',detail:'3 x 20-30 sec',tag:null,rest:0,photo:null,logKey:null}
+    ]}
+   ],
+   tip:"Le leg press est ta priorite. Les jambes brulent enormement de calories au repos."},
+
+  {label:'Jeu',short:'Flex',type:'Actif/Flex',active:false,flex:true,
+   title:'Journee active ou repos actif',sub:'Flexible',chips:['Optionnel'],
+   sections:[{name:'Options',items:[
+     {name:'2e sortie course',detail:'35-45 min Zone 2',tag:null,rest:0,photo:null,logKey:null},
+     {name:'Salle legere',   detail:'45 min max, charges -20%',tag:null,rest:0,photo:null,logKey:null},
+     {name:'Marche longue',  detail:'45-60 min marche rapide',tag:null,rest:0,photo:null,logKey:null}
+   ]}],
+   tip:"Jeudi c'est ton joker. Ecoute le corps en fin de journee."},
+
+  {label:'Ven',short:'OFF',type:'Repos',active:false,rest:true,title:'Repos',sub:''},
+
+  {label:'Sam',short:'Run',type:'Course',active:true,
+   title:'Course — Zone 2',sub:'Dehors ou tapis | 35-45 min',chips:['Cardio','Zone 2'],
+   sections:[{name:'Structure',items:[
+     {name:'Marche 5 min', detail:'Echauffement',tag:null,rest:0,photo:null,logKey:null},
+     {name:'Course Zone 2',detail:'25-35 min — meme rythme que lundi',tag:null,rest:0,photo:null,logKey:null},
+     {name:'Marche 5 min', detail:'Retour au calme',tag:null,rest:0,photo:null,logKey:null}
+   ]}],
+   tip:"Profites-en pour courir dehors si possible."},
 ];
 
-let selectedDay = 0;
-let activeTab = 'session';
-
-function getTodayIndex() {
-  const map = [0,1,2,3,4,5,6]; // Sun=0..Sat=6
-  return new Date().getDay();
+// ── STORAGE ──────────────────────────────────────────────────────────────
+// Format: { [logKey]: [ {date:'2026-04-17', poids:45, reps:12}, ... ] }
+function loadLog() {
+  try { return JSON.parse(localStorage.getItem('benoit_log') || '{}'); } catch(e) { return {}; }
+}
+function saveLog(log) {
+  localStorage.setItem('benoit_log', JSON.stringify(log));
+}
+function addEntry(logKey, poids, reps) {
+  const log = loadLog();
+  if (!log[logKey]) log[logKey] = [];
+  const today = new Date().toISOString().slice(0,10);
+  // Remove existing entry for today if any
+  log[logKey] = log[logKey].filter(e => e.date !== today);
+  log[logKey].push({date: today, poids: parseFloat(poids), reps: parseInt(reps)});
+  // Keep only last 30 entries
+  log[logKey] = log[logKey].slice(-30);
+  saveLog(log);
+}
+function getHistory(logKey, n=3) {
+  const log = loadLog();
+  return (log[logKey] || []).slice(-n).reverse();
+}
+function getMaxPoids(logKey) {
+  const log = loadLog();
+  const entries = log[logKey] || [];
+  if (!entries.length) return null;
+  return Math.max(...entries.map(e => e.poids));
+}
+function formatDate(str) {
+  const d = new Date(str + 'T12:00:00');
+  return d.toLocaleDateString('fr-CA', {month:'short', day:'numeric'});
 }
 
+// ── TIMER ────────────────────────────────────────────────────────────────
+let timerInterval = null;
+let timerLeft = 0;
+function startTimer(seconds, exName) {
+  if (timerInterval) clearInterval(timerInterval);
+  timerLeft = seconds;
+  const overlay = document.getElementById('timerOverlay');
+  const overlayTime = document.getElementById('overlayTime');
+  document.getElementById('overlayLabel').textContent = exName;
+  overlay.classList.add('visible');
+  overlayTime.textContent = timerLeft;
+  timerInterval = setInterval(() => {
+    timerLeft--;
+    overlayTime.textContent = timerLeft;
+    if (timerLeft <= 0) {
+      clearInterval(timerInterval); timerInterval = null;
+      overlay.classList.remove('visible');
+      if ('vibrate' in navigator) navigator.vibrate([200,100,200]);
+    }
+  }, 1000);
+}
+function cancelTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  document.getElementById('timerOverlay').classList.remove('visible');
+}
+
+// ── PHOTO TOGGLE ─────────────────────────────────────────────────────────
+function togglePhoto(id) {
+  const panel = document.getElementById('photo-' + id);
+  if (!panel) return;
+  const open = panel.classList.toggle('open');
+  const btn = document.getElementById('photobtn-' + id);
+  if (btn) btn.textContent = open ? '✕' : '📷';
+}
+
+// ── LOG PANEL TOGGLE ──────────────────────────────────────────────────────
+function toggleLog(id) {
+  const panel = document.getElementById('log-' + id);
+  if (!panel) return;
+  panel.classList.toggle('open');
+}
+
+function saveEntry(id, logKey) {
+  const p = document.getElementById('input-poids-' + id);
+  const r = document.getElementById('input-reps-' + id);
+  const poids = parseFloat(p.value);
+  const reps = parseInt(r.value);
+  if (!poids || !reps || isNaN(poids) || isNaN(reps)) return;
+  addEntry(logKey, poids, reps);
+  // Refresh the log panel
+  renderLogPanel(id, logKey);
+  // Update the last entry badge
+  renderLastBadge(id, logKey);
+  p.value = '';
+  r.value = '';
+}
+
+function renderLogPanel(id, logKey) {
+  const hist = getHistory(logKey, 3);
+  const maxP = getMaxPoids(logKey);
+  const container = document.getElementById('log-hist-' + id);
+  if (!container) return;
+  if (!hist.length) {
+    container.innerHTML = '<div style="font-size:12px;color:var(--text-faint);text-align:center;padding:4px 0">Aucune entree encore</div>';
+    return;
+  }
+  container.innerHTML = hist.map(e => {
+    const isPR = e.poids === maxP;
+    return `<div class="log-hist-row">
+      <span class="log-hist-date">${formatDate(e.date)}</span>
+      <span><span class="log-hist-val">${e.poids} lbs x ${e.reps}</span>${isPR ? '<span class="log-hist-pr">PR</span>' : ''}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderLastBadge(id, logKey) {
+  const hist = getHistory(logKey, 1);
+  const badge = document.getElementById('badge-' + id);
+  if (!badge) return;
+  if (!hist.length) { badge.style.display = 'none'; return; }
+  const e = hist[0];
+  const maxP = getMaxPoids(logKey);
+  const isPR = e.poids === maxP;
+  badge.style.display = 'inline-flex';
+  badge.className = 'ex-last' + (isPR ? ' ex-last-pr' : '');
+  badge.textContent = e.poids + ' lbs x ' + e.reps + (isPR ? ' PR' : '');
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let selectedDay = new Date().getDay();
+let activeTab = 'session';
+
+// ── RENDER STRIP ──────────────────────────────────────────────────────────
 function renderStrip() {
   const strip = document.getElementById('dayStrip');
   strip.innerHTML = '';
@@ -459,110 +438,176 @@ function renderStrip() {
     if (d.rest) cls += ' rest-day';
     if (i === selectedDay) cls += ' selected';
     btn.className = cls;
-    btn.innerHTML = `
-      <span class="day-btn-label">${d.label}</span>
-      <span class="day-btn-icon">${d.short}</span>
-      <span class="day-btn-type">${d.type}</span>
-      ${d.active ? '<span class="day-dot"></span>' : '<span style="height:4px"></span>'}
-    `;
+    btn.innerHTML = `<span class="day-btn-label">${d.label}</span><span class="day-btn-icon">${d.short}</span><span class="day-btn-type">${d.type}</span>${d.active ? '<span class="day-dot"></span>' : '<span style="height:4px"></span>'}`;
     btn.onclick = () => { selectedDay = i; renderStrip(); renderContent(); };
     strip.appendChild(btn);
   });
   const sel = strip.children[selectedDay];
-  if (sel) sel.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  if (sel) sel.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
 }
 
+// ── SWITCH TAB ────────────────────────────────────────────────────────────
 function switchTab(tab) {
   activeTab = tab;
-  document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', ['session','progression','principes'][i] === tab);
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['session','progression','principes','journal'][i] === tab);
   });
   renderContent();
 }
 
+// ── RENDER CONTENT ────────────────────────────────────────────────────────
 function renderContent() {
   const el = document.getElementById('scrollContent');
   const d = days[selectedDay];
 
   if (activeTab === 'progression') {
-    el.innerHTML = `
-      <div class="info-banner">
-        <div class="info-banner-title">Regle d'or</div>
-        <div class="info-banner-text">Jamais plus de 10% d'augmentation de volume par semaine. Le corps s'adapte, il ne se transforme pas du jour au lendemain.</div>
-      </div>
-      <div class="prog-card">
-        ${[
-          ['Sem. 1–2', 'Charges legeres (60-65%). Apprendre les mouvements. Priorite : forme parfaite.'],
-          ['Sem. 3–4', '15 reps propres 2 seances de suite = augmenter de 2.5-5 lbs.'],
-          ['Sem. 5–6', 'Descendre a 10-12 reps avec charges plus lourdes sur les exercices principaux.'],
-          ['Sem. 7–8', 'Bilan : si tout va bien, ajouter un exercice libre simple par seance.'],
-          ['Course 1–4', '35 min Zone 2. Pas plus. Base d\'abord.'],
-          ['Course 5–8', '+5 min par semaine si tout va bien. Max 50 min en phase 1.']
-        ].map(([l,t]) => `<div class="prog-row"><span class="prog-label">${l}</span><span class="prog-text">${t}</span></div>`).join('')}
-      </div>
-    `;
+    el.innerHTML = `<div class="info-banner"><div class="info-banner-title">Regle d'or</div><div class="info-banner-text">Jamais plus de 10% d'augmentation de volume par semaine.</div></div>
+    <div class="prog-card">${[
+      ['Sem. 1–2','Charges legeres (60-65%). Priorite : forme parfaite.'],
+      ['Sem. 3–4','15 reps propres 2 seances de suite = +2.5-5 lbs.'],
+      ['Sem. 5–6','Descendre a 10-12 reps avec charges plus lourdes.'],
+      ['Sem. 7–8','Bilan : ajouter un exercice libre simple.'],
+      ['Course 1–4','35 min Zone 2 max.'],
+      ['Course 5–8','+5 min/semaine. Max 50 min.']
+    ].map(([l,t])=>`<div class="prog-row"><span class="prog-label">${l}</span><span class="prog-text">${t}</span></div>`).join('')}</div>`;
     return;
   }
 
   if (activeTab === 'principes') {
-    el.innerHTML = `
-      <div class="principle-grid">
-        ${[
-          ['Machines d\'abord', 'Securitaires, guidees, reproductibles. Force et conscience musculaire avant les poids libres.'],
-          ['Rameur', 'Corps entier, faible impact. Echauffement ideal avant les machines.'],
-          ['Zone 2', 'Pas d\'intervalles. Combustion de graisses maximale, stress articulaire minimal.'],
-          ['Ven. = OFF fixe', 'La croissance musculaire se passe au repos. Non-negociable.'],
-          ['5-6 jours', 'L\'arret prolonge brise le momentum. Ce programme garde le rythme sans te detruire.'],
-          ['Phase 1', '8 semaines de machines. La patience ici = moins de blessures = plus de constance.']
-        ].map(([n,d]) => `<div class="principle-card"><div class="principle-name">${n}</div><div class="principle-desc">${d}</div></div>`).join('')}
-      </div>
-    `;
+    el.innerHTML = `<div class="principle-grid">${[
+      ['Machines d\'abord','Guidees, securitaires. Force avant les poids libres.'],
+      ['Rameur','Corps entier, faible impact. Echauffement ideal.'],
+      ['Zone 2','Combustion des graisses maximale.'],
+      ['Ven. = OFF','La croissance se passe au repos.'],
+      ['5-6 jours','Garde le rythme sans te detruire.'],
+      ['Phase 1','8 semaines = fondations solides.']
+    ].map(([n,desc])=>`<div class="principle-card"><div class="principle-name">${n}</div><div class="principle-desc">${desc}</div></div>`).join('')}</div>`;
     return;
   }
 
-  // Session tab
+  if (activeTab === 'journal') {
+    renderJournal(el);
+    return;
+  }
+
+  // ── SESSION ───────────────────────────────────────────────────────────
   if (d.rest) {
-    el.innerHTML = `
-      <div class="rest-screen">
-        <div class="rest-icon">—</div>
-        <div class="rest-title">Repos complet</div>
-        <div class="rest-text">Sommeil, hydratation, nutrition. C'est aujourd'hui que les muscles se reparent et progressent.</div>
-      </div>
-    `;
+    el.innerHTML = `<div class="rest-screen"><div style="font-size:32px;color:var(--text-faint)">—</div><div class="rest-title">Repos complet</div><div class="rest-text">Sommeil, hydratation, nutrition. C'est aujourd'hui que les muscles se reparent.</div></div>`;
     return;
   }
 
-  let html = `
-    <div class="session-header">
-      <div class="session-title">${d.title}</div>
-      <div class="session-sub">${d.sub}</div>
-      ${d.chips ? `<div class="session-meta">${d.chips.map(c => `<span class="meta-chip">${c}</span>`).join('')}</div>` : ''}
-    </div>
-  `;
+  let html = `<div class="session-header"><div class="session-title">${d.title}</div><div class="session-sub">${d.sub}</div>${d.chips?`<div class="session-meta">${d.chips.map(c=>`<span class="meta-chip">${c}</span>`).join('')}</div>`:''}</div>`;
 
   d.sections.forEach(sec => {
     html += `<div class="section-block"><div class="section-title">${sec.name}</div>`;
     sec.items.forEach((item, i) => {
-      html += `<div class="ex-row">
-        <div class="ex-num">${i + 1}</div>
+      const uid = `d${selectedDay}-${sec.name.replace(/\s/g,'')}-${i}`;
+      const hasPhoto = item.photo && PHOTOS[item.photo];
+      const hasTimer = item.rest > 0;
+      const hasLog   = !!item.logKey;
+
+      html += `<div class="ex-row"><div class="ex-main">
+        <div class="ex-num">${i+1}</div>
         <div class="ex-body">
-          <div class="ex-name">${item.name}${item.tag ? `<span class="ex-tag">${item.tag}</span>` : ''}</div>
+          <div class="ex-name">${item.name}${item.tag?`<span class="ex-tag">${item.tag}</span>`:''}</div>
           <div class="ex-detail">${item.detail}</div>
+          ${hasLog ? `<span class="ex-last" id="badge-${uid}" style="display:none"></span>` : ''}
         </div>
+        <div class="ex-actions">
+          ${hasPhoto ? `<button class="ex-icon-btn" id="photobtn-${uid}" onclick="togglePhoto('${uid}')">📷</button>` : ''}
+          ${hasLog   ? `<button class="ex-icon-btn" onclick="toggleLog('${uid}')" title="Inscrire poids">✏️</button>` : ''}
+        </div>
+      </div>`;
+
+      if (hasPhoto) {
+        const p = PHOTOS[item.photo];
+        html += `<div class="ex-photo-panel" id="photo-${uid}"><img src="${p.url}" alt="${p.cap}" loading="lazy"><div class="ex-photo-caption">${p.cap}</div></div>`;
+      }
+
+      if (hasLog) {
+        html += `<div class="log-panel" id="log-${uid}">
+          <div class="log-inputs">
+            <div>
+              <input class="log-input" type="number" id="input-poids-${uid}" placeholder="45" min="0" step="2.5" style="width:80px">
+              <div class="log-input-label">lbs</div>
+            </div>
+            <div class="log-x">x</div>
+            <div>
+              <input class="log-input" type="number" id="input-reps-${uid}" placeholder="12" min="1" step="1" style="width:64px">
+              <div class="log-input-label">reps</div>
+            </div>
+            <button class="log-save-btn" onclick="saveEntry('${uid}','${item.logKey}')">Sauvegarder</button>
+          </div>
+          <div class="log-hist-title">3 dernieres seances</div>
+          <div class="log-history" id="log-hist-${uid}"></div>
+        </div>`;
+      }
+
+      if (hasTimer) {
+        html += `<div class="timer-bar"><button class="timer-btn" onclick="startTimer(${item.rest},'${item.name.replace(/'/g,"\\'")}')">Repos ${item.rest}s</button><span class="timer-label">Appuie apres ta serie</span></div>`;
+      }
+
+      html += `</div>`;
+    });
+    html += `</div>`;
+  });
+
+  if (d.tip) html += `<div class="coach-tip"><div class="coach-tip-label">Coach Tremblay</div><div class="coach-tip-text">${d.tip}</div></div>`;
+  el.innerHTML = html;
+  el.scrollTop = 0;
+
+  // Populate badges and history panels after render
+  d.sections.forEach(sec => {
+    sec.items.forEach((item, i) => {
+      if (!item.logKey) return;
+      const uid = `d${selectedDay}-${sec.name.replace(/\s/g,'')}-${i}`;
+      renderLastBadge(uid, item.logKey);
+      renderLogPanel(uid, item.logKey);
+    });
+  });
+}
+
+// ── JOURNAL VIEW ─────────────────────────────────────────────────────────
+function renderJournal(el) {
+  const log = loadLog();
+  const allKeys = Object.keys(log).filter(k => log[k].length > 0);
+
+  if (!allKeys.length) {
+    el.innerHTML = `<div class="rest-screen"><div style="font-size:32px;color:var(--text-faint)">✏️</div><div class="rest-title">Journal vide</div><div class="rest-text">Inscris tes poids pendant une session — ils apparaitront ici.</div></div>`;
+    return;
+  }
+
+  // Build name map from plan
+  const nameMap = {};
+  days.forEach(d => {
+    if (!d.sections) return;
+    d.sections.forEach(sec => sec.items.forEach(item => {
+      if (item.logKey) nameMap[item.logKey] = item.name;
+    }));
+  });
+
+  let html = '';
+  allKeys.forEach(key => {
+    const entries = [...log[key]].reverse().slice(0,3);
+    const maxP = Math.max(...log[key].map(e=>e.poids));
+    const name = nameMap[key] || key;
+    html += `<div class="section-block" style="margin-bottom:10px">
+      <div class="section-title">${name}</div>`;
+    entries.forEach(e => {
+      const isPR = e.poids === maxP;
+      html += `<div class="log-hist-row" style="padding:10px 16px;display:flex;justify-content:space-between;border-bottom:1px solid var(--border)">
+        <span class="log-hist-date">${formatDate(e.date)}</span>
+        <span><span class="log-hist-val">${e.poids} lbs x ${e.reps}</span>${isPR?'<span class="log-hist-pr">PR</span>':''}</span>
       </div>`;
     });
     html += `</div>`;
   });
 
-  if (d.tip) {
-    html += `<div class="coach-tip"><div class="coach-tip-label">Coach Tremblay</div><div class="coach-tip-text">${d.tip}</div></div>`;
-  }
-
   el.innerHTML = html;
-  document.getElementById('scrollContent').scrollTop = 0;
+  el.scrollTop = 0;
 }
 
-selectedDay = getTodayIndex();
+// ── INIT ──────────────────────────────────────────────────────────────────
 renderStrip();
 renderContent();
 </script>
