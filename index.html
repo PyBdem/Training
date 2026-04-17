@@ -60,7 +60,7 @@ html,body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:
 /* Tabs */
 .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 16px;flex-shrink:0}
 .tab-btn{flex:1;padding:11px 4px;font-size:11px;font-weight:500;color:var(--text-faint);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;text-align:center}
-.tab-btn.active{color:var(--green-dark);border-bottom-color:var(--green)}
+.tab-btn.active{color:var(--green-deep);border-bottom-color:var(--green-dark);font-weight:600}
 
 /* Scroll */
 .scroll-content{flex:1;overflow-y:auto;padding:16px 16px calc(var(--safe-bottom) + 80px);-webkit-overflow-scrolling:touch}
@@ -70,7 +70,7 @@ html,body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:
 .session-title{font-size:16px;font-weight:600;margin-bottom:2px}
 .session-sub{font-size:12px;color:var(--text-muted)}
 .session-meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.meta-chip{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:var(--green-light);color:var(--green-dark)}
+.meta-chip{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--green-dark);color:#fff}
 
 .section-block{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;overflow:hidden}
 .section-title{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);padding:10px 16px 8px;border-bottom:1px solid var(--border)}
@@ -83,14 +83,14 @@ html,body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:
 .ex-body{flex:1;min-width:0}
 .ex-name{font-size:14px;font-weight:500;color:var(--text)}
 .ex-detail{font-size:12px;color:var(--text-muted);margin-top:2px;line-height:1.4}
-.ex-tag{display:inline-block;font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--green-light);color:var(--green-dark);margin-left:6px;vertical-align:middle}
+.ex-tag{display:inline-block;font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--green-dark);color:#fff;margin-left:6px;vertical-align:middle}
 .ex-actions{display:flex;gap:6px;flex-shrink:0;align-items:flex-start;padding-top:1px}
 .ex-icon-btn{background:none;border:none;cursor:pointer;padding:2px;color:var(--text-faint);font-size:16px;line-height:1;transition:color .15s}
 .ex-icon-btn:active{color:var(--green)}
 
 /* Last entry badge under exercise name */
-.ex-last{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;font-weight:500;color:var(--green-dark);background:var(--green-light);border-radius:20px;padding:2px 8px}
-.ex-last-pr{color:var(--amber-dark);background:var(--amber-light)}
+.ex-last{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;font-weight:600;color:var(--green-deep);background:#fff;border:1.5px solid var(--green);border-radius:20px;padding:2px 8px}
+.ex-last-pr{color:var(--amber-dark);background:#fff;border-color:var(--amber)}
 
 /* Photo panel */
 .ex-photo-panel{display:none;padding:0 16px 12px}
@@ -122,7 +122,7 @@ html,body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:
 .log-hist-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border)}
 .log-hist-date{font-size:11px;color:var(--text-faint)}
 .log-hist-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--text)}
-.log-hist-pr{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;background:var(--amber-light);color:var(--amber-dark);border-radius:10px;padding:1px 6px;margin-left:6px}
+.log-hist-pr{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;background:var(--amber-dark);color:#fff;border-radius:10px;padding:1px 6px;margin-left:6px}
 
 /* Global timer overlay */
 .timer-overlay{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--green-deep);color:#fff;padding:14px 20px calc(var(--safe-bottom) + 14px);display:none;align-items:center;gap:14px;z-index:100;border-top:1px solid rgba(255,255,255,.15)}
@@ -132,9 +132,9 @@ html,body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:
 .timer-overlay-cancel{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 
 /* Coach tip */
-.coach-tip{background:var(--green-light);border-left:3px solid var(--green);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;margin-bottom:10px}
-.coach-tip-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--green-dark);margin-bottom:4px}
-.coach-tip-text{font-size:13px;color:var(--green-deep);line-height:1.5}
+.coach-tip{background:var(--green-deep);border-left:3px solid var(--green);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;margin-bottom:10px}
+.coach-tip-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--green-mid);margin-bottom:4px}
+.coach-tip-text{font-size:13px;color:#fff;line-height:1.5}
 
 /* Rest / prog / principes */
 .rest-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;gap:12px}
@@ -149,9 +149,9 @@ html,body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:
 .principle-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:12px 14px}
 .principle-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
 .principle-desc{font-size:11px;color:var(--text-muted);line-height:1.5}
-.info-banner{background:var(--amber-light);border-radius:var(--radius);border:1px solid rgba(186,117,23,.2);padding:12px 14px;margin-bottom:12px}
-.info-banner-title{font-size:12px;font-weight:600;color:var(--amber-dark);margin-bottom:3px}
-.info-banner-text{font-size:12px;color:var(--amber-dark);line-height:1.5;opacity:.85}
+.info-banner{background:var(--green-deep);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px}
+.info-banner-title{font-size:12px;font-weight:600;color:#fff;margin-bottom:3px}
+.info-banner-text{font-size:12px;color:rgba(255,255,255,0.85);line-height:1.5}
 </style>
 </head>
 <body>
