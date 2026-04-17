@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0F6E56">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Entrainement">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Entrainement — Benoit</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --green: #1D9E75;
+    --green-dark: #0F6E56;
+    --green-deep: #085041;
+    --green-light: #E1F5EE;
+    --green-mid: #9FE1CB;
+    --amber: #EF9F27;
+    --amber-light: #FAEEDA;
+    --amber-dark: #854F0B;
+    --gray-50: #F8F7F4;
+    --gray-100: #EDECEA;
+    --gray-200: #D3D1C7;
+    --gray-400: #888780;
+    --gray-600: #5F5E5A;
+    --gray-900: #1A1A18;
+    --text: #1A1A18;
+    --text-muted: #5F5E5A;
+    --text-faint: #888780;
+    --bg: #F8F7F4;
+    --surface: #FFFFFF;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.14);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --green: #5DCAA5;
+      --green-dark: #9FE1CB;
+      --green-deep: #E1F5EE;
+      --green-light: #085041;
+      --green-mid: #0F6E56;
+      --amber: #FAC775;
+      --amber-light: #412402;
+      --amber-dark: #FAC775;
+      --gray-50: #1C1C1A;
+      --gray-100: #242422;
+      --gray-200: #2C2C2A;
+      --gray-400: #888780;
+      --gray-600: #B4B2A9;
+      --gray-900: #F1EFE8;
+      --text: #F1EFE8;
+      --text-muted: #B4B2A9;
+      --text-faint: #888780;
+      --bg: #141412;
+      --surface: #1C1C1A;
+      --border: rgba(255,255,255,0.07);
+      --border-strong: rgba(255,255,255,0.12);
+    }
+  }
+
+  html, body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100%;
+    overflow: hidden;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Header */
+  .header {
+    background: var(--green-dark);
+    padding: calc(var(--safe-top) + 14px) 20px 14px;
+    flex-shrink: 0;
+  }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .header-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 2px; }
+  .header-title { font-size: 20px; font-weight: 600; color: #fff; }
+  .header-phase { font-size: 12px; color: var(--green-mid); margin-top: 2px; }
+  .week-badge { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 4px 10px; font-size: 12px; color: #fff; font-weight: 500; font-family: 'DM Mono', monospace; }
+
+  /* Day strip */
+  .day-strip {
+    background: var(--green-deep);
+    padding: 10px 16px 12px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    flex-shrink: 0;
+    scrollbar-width: none;
+  }
+  .day-strip::-webkit-scrollbar { display: none; }
+  .day-btn {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    min-width: 52px;
+  }
+  .day-btn.active-day { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
+  .day-btn.selected { background: var(--green); border-color: var(--green-mid); }
+  .day-btn-label { font-size: 10px; font-weight: 500; color: var(--green-mid); letter-spacing: 0.06em; text-transform: uppercase; }
+  .day-btn.selected .day-btn-label { color: #fff; }
+  .day-btn-icon { font-size: 11px; font-weight: 600; color: #fff; }
+  .day-btn-type { font-size: 9px; color: rgba(255,255,255,0.5); }
+  .day-btn.selected .day-btn-type { color: rgba(255,255,255,0.8); }
+  .day-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--green); margin-top: 2px; }
+  .day-btn.selected .day-dot { background: #fff; }
+  .day-btn.rest-day .day-btn-icon { color: rgba(255,255,255,0.35); }
+
+  /* Tabs */
+  .tab-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    padding: 0 16px;
+    gap: 0;
+    flex-shrink: 0;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 11px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-faint);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .tab-btn.active { color: var(--green-dark); border-bottom-color: var(--green); }
+
+  /* Scroll content */
+  .scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 16px calc(var(--safe-bottom) + 16px);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Session cards */
+  .session-header {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .session-title { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+  .session-sub { font-size: 12px; color: var(--text-muted); }
+  .session-meta { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .meta-chip { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; background: var(--green-light); color: var(--green-dark); }
+  .meta-chip.amber { background: var(--amber-light); color: var(--amber-dark); }
+
+  .section-block {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .section-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding: 10px 16px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ex-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ex-row:last-child { border-bottom: none; }
+  .ex-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-faint);
+    min-width: 20px;
+    padding-top: 2px;
+  }
+  .ex-body { flex: 1; }
+  .ex-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .ex-detail { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+  .ex-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--green-light);
+    color: var(--green-dark);
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .coach-tip {
+    background: var(--green-light);
+    border-left: 3px solid var(--green);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .coach-tip-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--green-dark); margin-bottom: 4px; }
+  .coach-tip-text { font-size: 13px; color: var(--green-deep); line-height: 1.5; }
+
+  /* Rest day */
+  .rest-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    gap: 12px;
+  }
+  .rest-icon { font-size: 40px; color: var(--text-faint); font-weight: 300; }
+  .rest-title { font-size: 18px; font-weight: 600; }
+  .rest-text { font-size: 14px; color: var(--text-muted); max-width: 260px; line-height: 1.6; }
+
+  /* Progression tab */
+  .prog-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .prog-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .prog-row:last-child { border-bottom: none; }
+  .prog-label { font-size: 12px; font-weight: 600; color: var(--green-dark); min-width: 110px; font-family: 'DM Mono', monospace; }
+  .prog-text { font-size: 13px; color: var(--text-muted); text-align: right; line-height: 1.4; }
+
+  /* Principles tab */
+  .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .principle-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+  }
+  .principle-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .principle-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+  .info-banner {
+    background: var(--amber-light);
+    border-radius: var(--radius);
+    border: 1px solid rgba(186,117,23,0.2);
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .info-banner-title { font-size: 12px; font-weight: 600; color: var(--amber-dark); margin-bottom: 3px; }
+  .info-banner-text { font-size: 12px; color: var(--amber-dark); line-height: 1.5; opacity: 0.85; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="header-label">Coach Tremblay</div>
+        <div class="header-title">Entrainement Benoit</div>
+        <div class="header-phase">Phase 1 — Fondations</div>
+      </div>
+      <div class="week-badge">Sem. 1–8</div>
+    </div>
+  </div>
+
+  <div class="day-strip" id="dayStrip"></div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('session')">Session</button>
+    <button class="tab-btn" onclick="switchTab('progression')">Progression</button>
+    <button class="tab-btn" onclick="switchTab('principes')">Principes</button>
+  </div>
+
+  <div class="scroll-content" id="scrollContent"></div>
+</div>
+
+<script>
+const days = [
+  {
+    label: 'Dim', short: 'Salle', type: 'Force A', active: true,
+    title: 'Force A — Poitrine, epaules, triceps',
+    sub: 'Salle | 10 min aviron + ~60 min machines',
+    chips: ['Salle', '~70 min'],
+    sections: [
+      { name: 'Echauffement', items: [
+        { name: 'Rameur', detail: '10 minutes — effort modere, 65-70% FC max', tag: null }
+      ]},
+      { name: 'Circuit machines', items: [
+        { name: 'Presse poitrine (chest press)', detail: '3 x 12-15 reps | repos 60 sec', tag: 'guidee' },
+        { name: 'Developpe epaules (shoulder press)', detail: '3 x 12-15 | repos 60 sec', tag: 'guidee' },
+        { name: 'Papillon pec deck', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
+        { name: 'Lateral raises machine', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
+        { name: 'Triceps pushdown cable', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
+        { name: 'Triceps overhead machine', detail: '2 x 15 | repos 45 sec', tag: 'guidee' },
+      ]},
+      { name: 'Finisher cardio', items: [
+        { name: 'Velo stationnaire ou elliptique', detail: '10 min, effort modere', tag: null }
+      ]}
+    ],
+    tip: 'Charge : choisis un poids ou tu peux faire 15 reps propres. 15 reps sans effort = augmente. Incapable de finir 12 = descends. Simple.'
+  },
+  {
+    label: 'Lun', short: 'Run', type: 'Course', active: true,
+    title: 'Course — Zone 2',
+    sub: 'Dehors ou tapis | 35-45 minutes',
+    chips: ['Cardio', 'Zone 2', '~40 min'],
+    sections: [
+      { name: 'Structure', items: [
+        { name: 'Marche 5 min', detail: 'Echauffement — augmenter progressivement', tag: null },
+        { name: 'Course Zone 2', detail: '25-35 min au rythme conversation — tu peux parler en phrases completes', tag: null },
+        { name: 'Marche 5 min', detail: 'Retour au calme', tag: null }
+      ]}
+    ],
+    tip: 'Zone 2 = lent, voulu, efficace. C\'est la zone de combustion des graisses maximale. Pas besoin d\'aller vite pour l\'instant.'
+  },
+  {
+    label: 'Mar', short: 'Salle', type: 'Force B', active: true,
+    title: 'Force B — Dos, biceps',
+    sub: 'Salle | 10 min aviron + ~60 min machines',
+    chips: ['Salle', '~70 min'],
+    sections: [
+      { name: 'Echauffement', items: [
+        { name: 'Rameur', detail: '10 minutes, effort modere', tag: null }
+      ]},
+      { name: 'Circuit machines', items: [
+        { name: 'Tirage poitrine (lat pulldown)', detail: '3 x 12-15 | repos 60 sec', tag: 'guidee' },
+        { name: 'Rowing machine assise (seated row)', detail: '3 x 12-15 | repos 60 sec', tag: 'guidee' },
+        { name: 'Tirage horizontal bras croises', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
+        { name: 'Curl biceps machine', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
+        { name: 'Curl marteau cable', detail: '2 x 15 | repos 45 sec', tag: 'guidee' },
+        { name: 'Face pulls cable', detail: '3 x 15 | repos 45 sec — sante epaules', tag: 'guidee' }
+      ]},
+      { name: 'Finisher cardio', items: [
+        { name: 'Rameur ou marche inclinee', detail: '10 min, effort modere', tag: null }
+      ]}
+    ],
+    tip: 'Face pulls : ne skip pas ca. Avec le volume de press du dimanche, les epaules ont besoin d\'equilibre. Ca protege ton investissement.'
+  },
+  {
+    label: 'Mer', short: 'Salle', type: 'Force C', active: true,
+    title: 'Force C — Jambes, fessiers, abdos',
+    sub: 'Salle | 10 min aviron + ~60 min machines',
+    chips: ['Salle', '~70 min'],
+    sections: [
+      { name: 'Echauffement', items: [
+        { name: 'Rameur', detail: '10 minutes, effort modere', tag: null }
+      ]},
+      { name: 'Circuit machines', items: [
+        { name: 'Leg press', detail: '4 x 12-15 | repos 75 sec — ton plus gros moteur metabolique', tag: 'guidee' },
+        { name: 'Leg extension quadriceps', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
+        { name: 'Leg curl ischio-jambiers', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
+        { name: 'Abducteurs machine', detail: '3 x 15 | repos 45 sec', tag: 'guidee' },
+        { name: 'Mollets assis (calf raise)', detail: '3 x 20 | repos 30 sec', tag: 'guidee' },
+        { name: 'Ab crunch machine', detail: '3 x 15 | repos 45 sec', tag: 'guidee' }
+      ]},
+      { name: 'Finisher optionnel', items: [
+        { name: 'Planche (plank)', detail: '3 x 20-30 sec — si il te reste de l\'energie', tag: null }
+      ]}
+    ],
+    tip: 'Le leg press est ta priorite de la semaine pour la composition corporelle. Les gros muscles des jambes brulent enormement au repos une fois developpes.'
+  },
+  {
+    label: 'Jeu', short: 'Flex', type: 'Actif/Flex', active: false, flex: true,
+    title: 'Journee active ou repos actif',
+    sub: 'Flexible selon ta recuperation',
+    chips: ['Optionnel'],
+    sections: [
+      { name: 'Options', items: [
+        { name: 'Option A — 2e sortie course', detail: '35-45 min Zone 2 si tu veux pousser a 2 courses cette semaine', tag: null },
+        { name: 'Option B — Salle legere', detail: 'Revisiter un groupe faible, 45 min max, charges -20%', tag: null },
+        { name: 'Option C — Marche longue', detail: '45-60 min marche rapide — recovery active efficace', tag: null }
+      ]}
+    ],
+    tip: 'Jeudi c\'est ton joker. Si la semaine a ete forte, marche et dors. Si tu te sens bien, 2e course. Ne prends pas la decision le matin — ecoute le corps en fin de journee.'
+  },
+  {
+    label: 'Ven', short: 'OFF', type: 'Repos', active: false, rest: true,
+    title: 'Repos', sub: ''
+  },
+  {
+    label: 'Sam', short: 'Run', type: 'Course', active: true,
+    title: 'Course — Zone 2',
+    sub: 'Dehors ou tapis | 35-45 minutes',
+    chips: ['Cardio', 'Zone 2', '~40 min'],
+    sections: [
+      { name: 'Structure', items: [
+        { name: 'Marche 5 min', detail: 'Echauffement', tag: null },
+        { name: 'Course Zone 2', detail: '25-35 min — meme rythme conversation que lundi', tag: null },
+        { name: 'Marche 5 min', detail: 'Retour au calme', tag: null }
+      ]}
+    ],
+    tip: 'Sortie de fin de semaine — profites-en pour courir dehors si la meteo le permet. Le terrain varie les muscles stabilisateurs et c\'est meilleur pour la tete aussi.'
+  }
+];
+
+let selectedDay = 0;
+let activeTab = 'session';
+
+function getTodayIndex() {
+  const map = [0,1,2,3,4,5,6]; // Sun=0..Sat=6
+  return new Date().getDay();
+}
+
+function renderStrip() {
+  const strip = document.getElementById('dayStrip');
+  strip.innerHTML = '';
+  days.forEach((d, i) => {
+    const btn = document.createElement('button');
+    let cls = 'day-btn';
+    if (d.active) cls += ' active-day';
+    if (d.rest) cls += ' rest-day';
+    if (i === selectedDay) cls += ' selected';
+    btn.className = cls;
+    btn.innerHTML = `
+      <span class="day-btn-label">${d.label}</span>
+      <span class="day-btn-icon">${d.short}</span>
+      <span class="day-btn-type">${d.type}</span>
+      ${d.active ? '<span class="day-dot"></span>' : '<span style="height:4px"></span>'}
+    `;
+    btn.onclick = () => { selectedDay = i; renderStrip(); renderContent(); };
+    strip.appendChild(btn);
+  });
+  const sel = strip.children[selectedDay];
+  if (sel) sel.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['session','progression','principes'][i] === tab);
+  });
+  renderContent();
+}
+
+function renderContent() {
+  const el = document.getElementById('scrollContent');
+  const d = days[selectedDay];
+
+  if (activeTab === 'progression') {
+    el.innerHTML = `
+      <div class="info-banner">
+        <div class="info-banner-title">Regle d'or</div>
+        <div class="info-banner-text">Jamais plus de 10% d'augmentation de volume par semaine. Le corps s'adapte, il ne se transforme pas du jour au lendemain.</div>
+      </div>
+      <div class="prog-card">
+        ${[
+          ['Sem. 1–2', 'Charges legeres (60-65%). Apprendre les mouvements. Priorite : forme parfaite.'],
+          ['Sem. 3–4', '15 reps propres 2 seances de suite = augmenter de 2.5-5 lbs.'],
+          ['Sem. 5–6', 'Descendre a 10-12 reps avec charges plus lourdes sur les exercices principaux.'],
+          ['Sem. 7–8', 'Bilan : si tout va bien, ajouter un exercice libre simple par seance.'],
+          ['Course 1–4', '35 min Zone 2. Pas plus. Base d\'abord.'],
+          ['Course 5–8', '+5 min par semaine si tout va bien. Max 50 min en phase 1.']
+        ].map(([l,t]) => `<div class="prog-row"><span class="prog-label">${l}</span><span class="prog-text">${t}</span></div>`).join('')}
+      </div>
+    `;
+    return;
+  }
+
+  if (activeTab === 'principes') {
+    el.innerHTML = `
+      <div class="principle-grid">
+        ${[
+          ['Machines d\'abord', 'Securitaires, guidees, reproductibles. Force et conscience musculaire avant les poids libres.'],
+          ['Rameur', 'Corps entier, faible impact. Echauffement ideal avant les machines.'],
+          ['Zone 2', 'Pas d\'intervalles. Combustion de graisses maximale, stress articulaire minimal.'],
+          ['Ven. = OFF fixe', 'La croissance musculaire se passe au repos. Non-negociable.'],
+          ['5-6 jours', 'L\'arret prolonge brise le momentum. Ce programme garde le rythme sans te detruire.'],
+          ['Phase 1', '8 semaines de machines. La patience ici = moins de blessures = plus de constance.']
+        ].map(([n,d]) => `<div class="principle-card"><div class="principle-name">${n}</div><div class="principle-desc">${d}</div></div>`).join('')}
+      </div>
+    `;
+    return;
+  }
+
+  // Session tab
+  if (d.rest) {
+    el.innerHTML = `
+      <div class="rest-screen">
+        <div class="rest-icon">—</div>
+        <div class="rest-title">Repos complet</div>
+        <div class="rest-text">Sommeil, hydratation, nutrition. C'est aujourd'hui que les muscles se reparent et progressent.</div>
+      </div>
+    `;
+    return;
+  }
+
+  let html = `
+    <div class="session-header">
+      <div class="session-title">${d.title}</div>
+      <div class="session-sub">${d.sub}</div>
+      ${d.chips ? `<div class="session-meta">${d.chips.map(c => `<span class="meta-chip">${c}</span>`).join('')}</div>` : ''}
+    </div>
+  `;
+
+  d.sections.forEach(sec => {
+    html += `<div class="section-block"><div class="section-title">${sec.name}</div>`;
+    sec.items.forEach((item, i) => {
+      html += `<div class="ex-row">
+        <div class="ex-num">${i + 1}</div>
+        <div class="ex-body">
+          <div class="ex-name">${item.name}${item.tag ? `<span class="ex-tag">${item.tag}</span>` : ''}</div>
+          <div class="ex-detail">${item.detail}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  if (d.tip) {
+    html += `<div class="coach-tip"><div class="coach-tip-label">Coach Tremblay</div><div class="coach-tip-text">${d.tip}</div></div>`;
+  }
+
+  el.innerHTML = html;
+  document.getElementById('scrollContent').scrollTop = 0;
+}
+
+selectedDay = getTodayIndex();
+renderStrip();
+renderContent();
+</script>
+</body>
+</html>
