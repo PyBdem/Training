@@ -206,6 +206,8 @@ const PHOTOS = {
   'ab-crunch':      {url:'photos/ab-crunch.jpg',      cap:'Ab crunch machine'},
   'rameur':         {url:'photos/rameur.jpg',         cap:'Rameur'},
   'velo':           {url:'photos/velo.jpg',           cap:'Velo stationnaire'},
+  'romanian-deadlift': {url:'photos/romanian-deadlift.jpg',   cap:'romanian-deadlift'},
+  'ab-wheel': {url:'photos/ab-wheel.jpg',   cap:'ab-wheel'},
 };
 
 // ── PLAN ─────────────────────────────────────────────────────────────────
@@ -230,7 +232,7 @@ const days = [
       {name:'Seated Cable Row',       detail:'4 x 8-10 | repos 2-3 min | coudes pres du corps, squeeze en fin',tag:null,  rest:150,photo:'seated-row',     logKey:'gym-a-seated-row'},
       {name:'Machine Shoulder Press', detail:'3 x 8-10 | repos 2-3 min',                                       tag:null,  rest:150,photo:'shoulder-press', logKey:'gym-a-shoulder-press'},
       {name:'Leg Curl (ischio)',       detail:'3 x 10-12 | repos 90s',                                          tag:null,  rest:90, photo:'leg-curl',       logKey:'gym-a-leg-curl'},
-      {name:'Ab Wheel / Planche lestee',detail:'3 x 12 reps ou 3 x 60s | repos 90s',                           tag:null,  rest:90, photo:null,             logKey:null},
+      {name:'Ab Wheel / Planche lestee',detail:'3 x 12 reps ou 3 x 60s | repos 90s',                           tag:null,  rest:90, photo:'ab-wheel',         logKey:'gym-a-ab-wheel'},
     ]}
    ],
    tip:"Stimulation hormonale maximale. Charges lourdes, mouvements composes. Augmente le poids des que 8 reps sont faciles."},
@@ -241,7 +243,7 @@ const days = [
    sections:[{name:'Structure',items:[
      {name:'Marche 5 min',      detail:'Echauffement',                              tag:null,rest:0, photo:null,logKey:null},
      {name:'Course Zone 2',     detail:'5-6 km (sem. 1-4) → 6-8 km (sem. 5-12) — allure conversationnelle',tag:null,rest:0,photo:null,logKey:null},
-     {name:'Ab Wheel',          detail:'3 x 10-12 reps | repos 60s',                tag:null,rest:60,photo:null,logKey:null},
+     {name:'Ab Wheel',          detail:'3 x 10-12 reps | repos 60s',                tag:null,rest:60,photo:'ab-wheel',logKey:null},
      {name:'Planche',           detail:'3 x 30-45 secondes',                        tag:null,rest:0, photo:null,logKey:null},
    ]}],
    tip:"Zone 2 = lent, voulu, efficace. Tu dois pouvoir parler pendant la course."},
@@ -255,7 +257,7 @@ const days = [
       {name:'Pec Deck (flyes)',        detail:'3 x 12-15 | repos 60s | etirement complet',                       tag:null,    rest:60,photo:'pec-deck',         logKey:'gym-b-pec-deck'},
       {name:'Lat Pulldown',            detail:'4 x 10-12 | repos 75s | tirer vers le menton, coudes vers hanches',tag:null,  rest:75,photo:'lat-pulldown',      logKey:'gym-b-lat-pulldown'},
       {name:'Machine Lateral Raise',   detail:'3 x 12-15 | repos 60s | leger, controle',                         tag:null,    rest:60,photo:'lateral-raises',    logKey:'gym-b-lateral-raise'},
-      {name:'Romanian Deadlift',       detail:'3 x 10-12 | repos 75s | hanches en arriere, dos neutre',          tag:'Smith', rest:75,photo:null,               logKey:'gym-b-rdl'},
+      {name:'Romanian Deadlift',       detail:'3 x 10-12 | repos 75s | hanches en arriere, dos neutre',          tag:'Smith', rest:75,photo:'romanian-deadlift',               logKey:'gym-b-rdl'},
       {name:'Cable Curl',              detail:'3 x 12-15 | repos 60s',                                            tag:null,    rest:60,photo:'bicep-curl',        logKey:'gym-b-cable-curl'},
       {name:'Tricep Pushdown (corde)', detail:'3 x 12-15 | repos 60s',                                            tag:null,    rest:60,photo:'triceps-push',     logKey:'gym-b-tricep-push'},
       {name:'Cable Crunch',            detail:'3 x 20 | repos 60s',                                               tag:null,    rest:60,photo:'ab-crunch',        logKey:'gym-b-cable-crunch'},
