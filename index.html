@@ -161,9 +161,9 @@ html,body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:
       <div>
         <div class="header-label">Coach Tremblay</div>
         <div class="header-title">Entrainement Benoit</div>
-        <div class="header-phase">Phase 1 — Fondations</div>
+        <div class="header-phase">Phase 2 — Programme principal</div>
       </div>
-      <div class="week-badge">Sem. 1–8</div>
+      <div class="week-badge">Sem. 1–12</div>
     </div>
   </div>
   <div class="day-strip" id="dayStrip"></div>
@@ -190,7 +190,7 @@ html,body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:
 const PHOTOS = {
   'chest-press':    {url:'photos/chest-press.jpg',    cap:'Presse poitrine machine'},
   'shoulder-press': {url:'photos/shoulder-press.jpg', cap:'Developpe epaules machine'},
-  'pec-deck':       {url:'photos/pec-deck.jpg',       cap:'Papillon pec deck'},
+  'pec-deck':       {url:'photos/pec-deck.jpeg',      cap:'Papillon pec deck'},
   'lateral-raises': {url:'photos/lateral-raise.jpeg', cap:'Lateral raises machine'},
   'triceps-push':   {url:'photos/tricep-push.jpeg',   cap:'Triceps pushdown cable'},
   'triceps-over':   {url:'photos/tricep-over.jpeg',   cap:'Triceps overhead machine'},
@@ -210,94 +210,103 @@ const PHOTOS = {
 
 // ── PLAN ─────────────────────────────────────────────────────────────────
 const days = [
-  {label:'Dim',short:'Salle',type:'Force A',active:true,
-   title:'Force A — Poitrine, epaules, triceps',sub:'Salle | 10 min aviron + ~60 min machines',chips:['Salle','~70 min'],
-   sections:[
-    {name:'Echauffement',items:[
-      {name:'Rameur',detail:'10 min — 65-70% FC max',tag:null,rest:0,photo:'rameur',logKey:null}
-    ]},
-    {name:'Circuit machines',items:[
-      {name:'Presse poitrine',     detail:'3 x 12-15 | repos 60s',tag:'guidee',rest:60,photo:'chest-press',  logKey:'presse-poitrine'},
-      {name:'Developpe epaules',   detail:'3 x 12-15 | repos 60s',tag:'guidee',rest:60,photo:'shoulder-press',logKey:'developpe-epaules'},
-      {name:'Papillon pec deck',   detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'pec-deck',     logKey:'pec-deck'},
-      {name:'Lateral raises',      detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'lateral-raises',logKey:'lateral-raises'},
-      {name:'Triceps pushdown',    detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'triceps-push', logKey:'triceps-pushdown'},
-      {name:'Triceps overhead',    detail:'2 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'triceps-over', logKey:'triceps-overhead'},
-    ]},
-    {name:'Finisher',items:[
-      {name:'Velo / elliptique',detail:'10 min modere',tag:null,rest:0,photo:'velo',logKey:null}
-    ]}
-   ],
-   tip:"Charge : 15 reps sans effort = augmente. Incapable de finir 12 = descends."},
-
-  {label:'Lun',short:'Run',type:'Course',active:true,
-   title:'Course — Zone 2',sub:'Dehors ou tapis | 35-45 min',chips:['Cardio','Zone 2'],
-   sections:[{name:'Structure',items:[
-     {name:'Marche 5 min', detail:'Echauffement',tag:null,rest:0,photo:null,logKey:null},
-     {name:'Course Zone 2',detail:'25-35 min — rythme conversation',tag:null,rest:0,photo:null,logKey:null},
-     {name:'Marche 5 min', detail:'Retour au calme',tag:null,rest:0,photo:null,logKey:null}
-   ]}],
-   tip:"Zone 2 = lent, voulu, efficace. Combustion des graisses maximale."},
-
-  {label:'Mar',short:'Salle',type:'Force B',active:true,
-   title:'Force B — Dos, biceps',sub:'Salle | 10 min aviron + ~60 min machines',chips:['Salle','~70 min'],
-   sections:[
-    {name:'Echauffement',items:[
-      {name:'Rameur',detail:'10 min modere',tag:null,rest:0,photo:'rameur',logKey:null}
-    ]},
-    {name:'Circuit machines',items:[
-      {name:'Lat pulldown',      detail:'3 x 12-15 | repos 60s',tag:'guidee',rest:60,photo:'lat-pulldown',logKey:'lat-pulldown'},
-      {name:'Rowing assise',     detail:'3 x 12-15 | repos 60s',tag:'guidee',rest:60,photo:'seated-row',  logKey:'rowing-assise'},
-      {name:'Tirage horizontal', detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'seated-row',  logKey:'tirage-horizontal'},
-      {name:'Curl biceps',       detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'bicep-curl',  logKey:'curl-biceps'},
-      {name:'Curl marteau cable',detail:'2 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'bicep-curl',  logKey:'curl-marteau'},
-      {name:'Face pulls cable',  detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'face-pulls',  logKey:'face-pulls'},
-    ]},
-    {name:'Finisher',items:[
-      {name:'Rameur ou marche inclinee',detail:'10 min modere',tag:null,rest:0,photo:'rameur',logKey:null}
-    ]}
-   ],
-   tip:"Face pulls : ne skip pas ca. Ca protege tes epaules a long terme."},
-
-  {label:'Mer',short:'Salle',type:'Force C',active:true,
-   title:'Force C — Jambes, fessiers, abdos',sub:'Salle | 10 min aviron + ~60 min machines',chips:['Salle','~70 min'],
-   sections:[
-    {name:'Echauffement',items:[
-      {name:'Rameur',detail:'10 min modere',tag:null,rest:0,photo:'rameur',logKey:null}
-    ]},
-    {name:'Circuit machines',items:[
-      {name:'Leg press',        detail:'4 x 12-15 | repos 75s',tag:'guidee',rest:75,photo:'leg-press',    logKey:'leg-press'},
-      {name:'Leg extension',    detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'leg-extension', logKey:'leg-extension'},
-      {name:'Leg curl',         detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'leg-curl',      logKey:'leg-curl'},
-      {name:'Abducteurs',       detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'abductors',     logKey:'abducteurs'},
-      {name:'Calf raise',       detail:'3 x 20 | repos 30s',   tag:'guidee',rest:30,photo:'calf-raise',    logKey:'calf-raise'},
-      {name:'Ab crunch machine',detail:'3 x 15 | repos 45s',   tag:'guidee',rest:45,photo:'ab-crunch',     logKey:'ab-crunch'},
-    ]},
-    {name:'Finisher optionnel',items:[
-      {name:'Planche (plank)',detail:'3 x 20-30 sec',tag:null,rest:0,photo:null,logKey:null}
-    ]}
-   ],
-   tip:"Le leg press est ta priorite. Les jambes brulent enormement de calories au repos."},
-
-  {label:'Jeu',short:'Flex',type:'Actif/Flex',active:false,flex:true,
-   title:'Journee active ou repos actif',sub:'Flexible',chips:['Optionnel'],
+  // 0 - Dimanche
+  {label:'Dim',short:'Recup',type:'Recup. active',active:false,flex:true,
+   title:'Recuperation active',sub:'Marche, mobilite, etirements',chips:['Actif'],
    sections:[{name:'Options',items:[
-     {name:'2e sortie course',detail:'35-45 min Zone 2',tag:null,rest:0,photo:null,logKey:null},
-     {name:'Salle legere',   detail:'45 min max, charges -20%',tag:null,rest:0,photo:null,logKey:null},
-     {name:'Marche longue',  detail:'45-60 min marche rapide',tag:null,rest:0,photo:null,logKey:null}
+     {name:'Marche',    detail:'30-45 min allure normale',           tag:null,rest:0,photo:null,logKey:null},
+     {name:'Mobilite',  detail:'Hanches, epaules, dorsaux — 15 min', tag:null,rest:0,photo:null,logKey:null},
+     {name:'Etirements',detail:'10-15 min post-marche',              tag:null,rest:0,photo:null,logKey:null}
    ]}],
-   tip:"Jeudi c'est ton joker. Ecoute le corps en fin de journee."},
+   tip:"Dimanche = recharge. Mouvement leger seulement, pas d'effort."},
 
-  {label:'Ven',short:'OFF',type:'Repos',active:false,rest:true,title:'Repos',sub:''},
+  // 1 - Lundi
+  {label:'Lun',short:'Salle',type:'Gym A — Force',active:true,
+   title:'Gym A — Force',sub:'Mouvements composes, charges lourdes | ~75 min',chips:['Salle','~75 min'],
+   sections:[
+    {name:'Exercices',items:[
+      {name:'Leg Press',              detail:'4 x 6-8 | repos 2-3 min | lourd, augmente des que 8 reps faciles',tag:'lourd',rest:150,photo:'leg-press',     logKey:'gym-a-leg-press'},
+      {name:'Machine Chest Press',    detail:'4 x 6-8 | repos 2-3 min | meme principe',                        tag:'lourd',rest:150,photo:'chest-press',    logKey:'gym-a-chest-press'},
+      {name:'Seated Cable Row',       detail:'4 x 8-10 | repos 2-3 min | coudes pres du corps, squeeze en fin',tag:null,  rest:150,photo:'seated-row',     logKey:'gym-a-seated-row'},
+      {name:'Machine Shoulder Press', detail:'3 x 8-10 | repos 2-3 min',                                       tag:null,  rest:150,photo:'shoulder-press', logKey:'gym-a-shoulder-press'},
+      {name:'Leg Curl (ischio)',       detail:'3 x 10-12 | repos 90s',                                          tag:null,  rest:90, photo:'leg-curl',       logKey:'gym-a-leg-curl'},
+      {name:'Ab Wheel / Planche lestee',detail:'3 x 12 reps ou 3 x 60s | repos 90s',                           tag:null,  rest:90, photo:null,             logKey:null},
+    ]}
+   ],
+   tip:"Stimulation hormonale maximale. Charges lourdes, mouvements composes. Augmente le poids des que 8 reps sont faciles."},
 
-  {label:'Sam',short:'Run',type:'Course',active:true,
+  // 2 - Mardi
+  {label:'Mar',short:'Run',type:'Course + Core',active:true,
+   title:'Course — Zone 2 + Core',sub:'Dehors ou tapis | 35-45 min',chips:['Cardio','Core'],
+   sections:[{name:'Structure',items:[
+     {name:'Marche 5 min',      detail:'Echauffement',                              tag:null,rest:0, photo:null,logKey:null},
+     {name:'Course Zone 2',     detail:'5-6 km (sem. 1-4) → 6-8 km (sem. 5-12) — allure conversationnelle',tag:null,rest:0,photo:null,logKey:null},
+     {name:'Ab Wheel',          detail:'3 x 10-12 reps | repos 60s',                tag:null,rest:60,photo:null,logKey:null},
+     {name:'Planche',           detail:'3 x 30-45 secondes',                        tag:null,rest:0, photo:null,logKey:null},
+   ]}],
+   tip:"Zone 2 = lent, voulu, efficace. Tu dois pouvoir parler pendant la course."},
+
+  // 3 - Mercredi
+  {label:'Mer',short:'Salle',type:'Gym B — Hyper.',active:true,
+   title:'Gym B — Hypertrophie',sub:'Volume eleve, tempo 2-0-1 | ~80 min',chips:['Salle','~80 min'],
+   sections:[
+    {name:'Exercices',items:[
+      {name:'Hack Squat machine',     detail:'4 x 10-12 | repos 75s | tempo 2-0-1, profondeur maximale',       tag:'tempo', rest:75,photo:'leg-press',       logKey:'gym-b-hack-squat'},
+      {name:'Pec Deck (flyes)',        detail:'3 x 12-15 | repos 60s | etirement complet',                       tag:null,    rest:60,photo:'pec-deck',         logKey:'gym-b-pec-deck'},
+      {name:'Lat Pulldown',            detail:'4 x 10-12 | repos 75s | tirer vers le menton, coudes vers hanches',tag:null,  rest:75,photo:'lat-pulldown',      logKey:'gym-b-lat-pulldown'},
+      {name:'Machine Lateral Raise',   detail:'3 x 12-15 | repos 60s | leger, controle',                         tag:null,    rest:60,photo:'lateral-raises',    logKey:'gym-b-lateral-raise'},
+      {name:'Romanian Deadlift',       detail:'3 x 10-12 | repos 75s | hanches en arriere, dos neutre',          tag:'Smith', rest:75,photo:null,               logKey:'gym-b-rdl'},
+      {name:'Cable Curl',              detail:'3 x 12-15 | repos 60s',                                            tag:null,    rest:60,photo:'bicep-curl',        logKey:'gym-b-cable-curl'},
+      {name:'Tricep Pushdown (corde)', detail:'3 x 12-15 | repos 60s',                                            tag:null,    rest:60,photo:'triceps-push',     logKey:'gym-b-tricep-push'},
+      {name:'Cable Crunch',            detail:'3 x 20 | repos 60s',                                               tag:null,    rest:60,photo:'ab-crunch',        logKey:'gym-b-cable-crunch'},
+    ]}
+   ],
+   tip:"Brulure musculaire = bonne nouvelle. Tempo 2s a la descente, explosif en montee. Repos strict 60-75s."},
+
+  // 4 - Jeudi
+  {label:'Jeu',short:'Run',type:'Course',active:true,
    title:'Course — Zone 2',sub:'Dehors ou tapis | 35-45 min',chips:['Cardio','Zone 2'],
    sections:[{name:'Structure',items:[
-     {name:'Marche 5 min', detail:'Echauffement',tag:null,rest:0,photo:null,logKey:null},
-     {name:'Course Zone 2',detail:'25-35 min — meme rythme que lundi',tag:null,rest:0,photo:null,logKey:null},
-     {name:'Marche 5 min', detail:'Retour au calme',tag:null,rest:0,photo:null,logKey:null}
+     {name:'Marche 5 min', detail:'Echauffement',                                                       tag:null,rest:0,photo:null,logKey:null},
+     {name:'Course Zone 2',detail:'5-6 km (sem. 1-4) → fartlek 5x1min accel / 2min recup (sem. 5-8)', tag:null,rest:0,photo:null,logKey:null},
+     {name:'Marche 5 min', detail:'Retour au calme',                                                    tag:null,rest:0,photo:null,logKey:null},
    ]}],
-   tip:"Profites-en pour courir dehors si possible."},
+   tip:"Sem. 5+ : fartlek — 1 min d'acceleration, 2 min recuperation, x5. Pas de timer, ecoute ton souffle."},
+
+  // 5 - Vendredi
+  {label:'Ven',short:'Salle',type:'Gym C — Circuit',active:true,
+   title:'Gym C — Circuit metabolique',sub:'4 rounds | repos 30s/ex, 90s/round | ~60 min',chips:['Salle','~60 min','Circuit'],
+   sections:[
+    {name:'4 rounds — 30s repos entre exercices, 90s apres chaque round',items:[
+      {name:'Leg Press (leger, explosif)',    detail:'15 reps — charge legere, explosif',  tag:null,rest:30, photo:'leg-press',  logKey:'gym-c-leg-press'},
+      {name:'Machine Chest Press (leger)',    detail:'15 reps — charge legere, rapide',    tag:null,rest:30, photo:'chest-press',logKey:'gym-c-chest-press'},
+      {name:'Lat Pulldown',                   detail:'15 reps',                             tag:null,rest:30, photo:'lat-pulldown',logKey:'gym-c-lat-pulldown'},
+      {name:'Hip Thrust / Kettlebell Swing',  detail:'15 reps',                             tag:null,rest:30, photo:null,         logKey:null},
+      {name:'Mountain Climbers',              detail:'30 secondes — le plus vite possible', tag:null,rest:30, photo:null,         logKey:null},
+      {name:'Box Step-ups / Battle Ropes',    detail:'30 secondes | 90s de repos apres ce round',tag:null,rest:90,photo:null,    logKey:null},
+    ]}
+   ],
+   tip:"FC elevee, charges legeres. L'objectif c'est de bruler des calories, pas de battre des records."},
+
+  // 6 - Samedi
+  {label:'Sam',short:'Run/Salle',type:'Course longue / Gym D',active:true,flex:true,
+   title:'Course longue OU Gym D',sub:'Au choix selon energie et semaine',chips:['Optionnel'],
+   sections:[
+    {name:'Option A — Course longue',items:[
+      {name:'Marche 5 min', detail:'Echauffement',                                                      tag:null,rest:0,photo:null,logKey:null},
+      {name:'Course longue',detail:'8-9 km facile (sem. 1-4) → 10-12 km (sem. 5-8) → 12-15 km (sem. 9-12)',tag:null,rest:0,photo:null,logKey:null},
+    ]},
+    {name:'Option B — Gym D (faiblesses et isolation)',items:[
+      {name:'Leg Extension',          detail:'3 x 15 | repos 60s',      tag:null,rest:60,photo:'leg-extension', logKey:'gym-d-leg-extension'},
+      {name:'Incline Machine Press',  detail:'3 x 12 | repos 60s',      tag:null,rest:60,photo:'chest-press',   logKey:'gym-d-incline-press'},
+      {name:'Face Pulls (cable)',     detail:'3 x 15 | repos 60s',      tag:null,rest:60,photo:'face-pulls',    logKey:'gym-d-face-pulls'},
+      {name:'Glute Kickback machine', detail:'3 x 15/cote | repos 60s', tag:null,rest:60,photo:null,            logKey:'gym-d-glute-kickback'},
+      {name:'Bicep Machine Curl',     detail:'3 x 12 | repos 60s',      tag:null,rest:60,photo:'bicep-curl',   logKey:'gym-d-bicep-curl'},
+      {name:'Tricep Overhead Extension',detail:'3 x 12 | repos 60s',    tag:null,rest:60,photo:'triceps-over', logKey:'gym-d-tricep-over'},
+      {name:'Core circuit',           detail:'Planches, rotations — 10 min',tag:null,rest:0,photo:null,         logKey:null},
+    ]}
+   ],
+   tip:"Course longue si les jambes sont fraiches. Gym D si t'as manque un entrainement dans la semaine."},
 ];
 
 // ── STORAGE ──────────────────────────────────────────────────────────────
@@ -461,26 +470,29 @@ function renderContent() {
   const d = days[selectedDay];
 
   if (activeTab === 'progression') {
-    el.innerHTML = `<div class="info-banner"><div class="info-banner-title">Regle d'or</div><div class="info-banner-text">Jamais plus de 10% d'augmentation de volume par semaine.</div></div>
+    el.innerHTML = `<div class="info-banner"><div class="info-banner-title">Regle d'or</div><div class="info-banner-text">Augmente le poids des que la derniere serie au top de la fourchette est facile. Pas besoin d'attendre.</div></div>
     <div class="prog-card">${[
-      ['Sem. 1–2','Charges legeres (60-65%). Priorite : forme parfaite.'],
-      ['Sem. 3–4','15 reps propres 2 seances de suite = +2.5-5 lbs.'],
-      ['Sem. 5–6','Descendre a 10-12 reps avec charges plus lourdes.'],
-      ['Sem. 7–8','Bilan : ajouter un exercice libre simple.'],
-      ['Course 1–4','35 min Zone 2 max.'],
-      ['Course 5–8','+5 min/semaine. Max 50 min.']
+      ['Gym A/B','Lourd → augmente des que 8 (A) ou 12 (B) reps sont faciles.'],
+      ['Gym C','Circuit : maintenir 15 reps propres avant d\'augmenter la charge.'],
+      ['Course 1–4','5-6 km conversationnels, mardi et jeudi.'],
+      ['Course 5–8','6-8 km + fartlek jeudi (5x1min accel / 2min recup).'],
+      ['Course 9–12','6-10 km + sprints. Course longue sam. 12-15 km.'],
+      ['Pesee','1x/semaine, mardi matin a jeun. Vise 0.5-1 kg/sem.'],
+      ['Evolt','Prochain scan dans 8-10 semaines.']
     ].map(([l,t])=>`<div class="prog-row"><span class="prog-label">${l}</span><span class="prog-text">${t}</span></div>`).join('')}</div>`;
     return;
   }
 
   if (activeTab === 'principes') {
     el.innerHTML = `<div class="principle-grid">${[
-      ['Machines d\'abord','Guidees, securitaires. Force avant les poids libres.'],
-      ['Rameur','Corps entier, faible impact. Echauffement ideal.'],
-      ['Zone 2','Combustion des graisses maximale.'],
-      ['Ven. = OFF','La croissance se passe au repos.'],
-      ['5-6 jours','Garde le rythme sans te detruire.'],
-      ['Phase 1','8 semaines = fondations solides.']
+      ['Gym A — Force','Charges lourdes, 6-8 reps, repos 2-3 min. Stimulation hormonale maximale.'],
+      ['Gym B — Hyper.','Volume eleve, tempo 2-0-1. Brulure = signal de croissance.'],
+      ['Gym C — Circuit','FC elevee, 4 rounds. Bruler des calories, pas battre des records.'],
+      ['Zone 2','Allure conversationnelle. Combustion des graisses maximale.'],
+      ['TRT + deficit','La TRT protege la masse musculaire. Deficit agressif possible.'],
+      ['Zero alcool','La variable #1. Alcool = estradiol, sommeil, lipolyse sabotes.'],
+      ['Dim = recup','Marche et mobilite. La croissance se passe au repos.'],
+      ['12 semaines','0.5-1 kg/sem = 6-12 kg de gras sur la duree.']
     ].map(([n,desc])=>`<div class="principle-card"><div class="principle-name">${n}</div><div class="principle-desc">${desc}</div></div>`).join('')}</div>`;
     return;
   }
